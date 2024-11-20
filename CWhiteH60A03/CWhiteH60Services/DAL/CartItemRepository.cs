@@ -36,6 +36,19 @@ public class CartItemRepository : ICartItemRepository<CartItem> {
     }
 
     public async Task<bool> Update(CartItem cartItem) {
+        var product = await _context.Products.FindAsync(cartItem.ProductId);
+        var oldCartItem = await _context.CartItems.FindAsync(cartItem.CartItemId);
+        if (product == null || oldCartItem == null) {
+            return false;
+        }
+        if (cartItem.Quantity != null && oldCartItem.Quantity != null) {
+            var quantityChange = oldCartItem.Quantity - cartItem.Quantity.Value;
+            product.Stock += quantityChange.Value;
+            if (product.Stock < 0) {
+                return false;
+            }
+            _context.Products.Update(product);
+        }
         _context.CartItems.Update(cartItem);
         var rowsAffected = await _context.SaveChangesAsync();
         return rowsAffected > 0;
