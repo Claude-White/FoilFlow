@@ -12,7 +12,10 @@ public class CartItemRepository : ICartItemRepository<CartItem> {
     
     public async Task<bool> Create(CartItem cartItem) {
         var product = await _context.Products.FindAsync(cartItem.ProductId);
-        if (product != null && cartItem.Quantity != null) {
+        if (product == null) {
+            return false;
+        }
+        if (cartItem.Quantity != null) {
             product.Stock -= cartItem.Quantity.Value;
             if (product.Stock < 0) {
                 return false;
