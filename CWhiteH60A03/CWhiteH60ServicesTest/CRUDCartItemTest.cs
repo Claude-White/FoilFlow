@@ -17,33 +17,33 @@ public class CRUDCartItemTest : IDisposable {
         _context.Database.EnsureCreated();
         
         _context.ProductCategories.AddRange(
-            new ProductCategory { CategoryId = 1, ProdCat = "Foil Boards" },
-            new ProductCategory { CategoryId = 2, ProdCat = "Front Wings" },
-            new ProductCategory { CategoryId = 3, ProdCat = "Stabilizers" },
-            new ProductCategory { CategoryId = 4, ProdCat = "Fuselage" },
-            new ProductCategory { CategoryId = 5, ProdCat = "Masts" }
+            new ProductCategory { CategoryId = 100, ProdCat = "Foil Boards" },
+            new ProductCategory { CategoryId = 200, ProdCat = "Front Wings" },
+            new ProductCategory { CategoryId = 300, ProdCat = "Stabilizers" },
+            new ProductCategory { CategoryId = 400, ProdCat = "Fuselage" },
+            new ProductCategory { CategoryId = 500, ProdCat = "Masts" }
         );
         
         _context.Products.AddRange(
             new Product { 
-                ProductId = 1, 
-                ProdCatId = 2, 
+                ProductId = 100, 
+                ProdCatId = 200, 
                 Description = "Sonar MA1850v2", 
                 Manufacturer = "North", 
                 Stock = 4, 
                 BuyPrice = 750.00m, 
                 SellPrice = 900.00m },
             new Product { 
-                ProductId = 2, 
-                ProdCatId = 2, 
-                Description = "G 1000 Front Wing V1", 
+                ProductId = 200, 
+                ProdCatId = 200, 
+                Description = "G 100 Front Wing V1", 
                 Manufacturer = "Slingshot", 
                 Stock = 8, 
                 BuyPrice = 550.00m, 
                 SellPrice = 630.00m },
             new Product {
-                ProductId = 7, 
-                ProdCatId = 4, 
+                ProductId = 700, 
+                ProdCatId = 400, 
                 Description = "Black Standard Fuselage", 
                 Manufacturer = "Axis", 
                 Stock = 34, 
@@ -51,8 +51,8 @@ public class CRUDCartItemTest : IDisposable {
                 SellPrice = 350.00m
             },
             new Product {
-                ProductId = 14, 
-                ProdCatId = 3, 
+                ProductId = 1400, 
+                ProdCatId = 300, 
                 Description = "Phantasm Stabilizer 340 Turbo-Tail V1", 
                 Manufacturer = "Slingshot", 
                 Stock = 46, 
@@ -60,8 +60,8 @@ public class CRUDCartItemTest : IDisposable {
                 SellPrice = 230.00m
             },
             new Product {
-                ProductId = 19, 
-                ProdCatId = 5, 
+                ProductId = 1900, 
+                ProdCatId = 500, 
                 Description = "CARBON MAST 16", 
                 Manufacturer = "F-ONE", 
                 Stock = 5, 
@@ -72,7 +72,7 @@ public class CRUDCartItemTest : IDisposable {
 
         _context.Customers.AddRange(
             new Customer {
-                CustomerId = 1, 
+                CustomerId = 100, 
                 FirstName = "Claude", 
                 LastName = "White", 
                 Email = "claude@white.com",
@@ -82,7 +82,7 @@ public class CRUDCartItemTest : IDisposable {
                 UserId = ""
             },
             new Customer {
-                CustomerId = 2, 
+                CustomerId = 200, 
                 FirstName = "Ryan", 
                 LastName = "Somers", 
                 Email = "ryan@somers.com",
@@ -92,7 +92,7 @@ public class CRUDCartItemTest : IDisposable {
                 UserId = ""
             },
             new Customer {
-                CustomerId = 3, 
+                CustomerId = 300, 
                 FirstName = "Pierre", 
                 LastName = "Badra", 
                 Email = "pierre@badra.com",
@@ -102,7 +102,7 @@ public class CRUDCartItemTest : IDisposable {
                 UserId = ""
             },
             new Customer {
-                CustomerId = 4, 
+                CustomerId = 400, 
                 FirstName = "Matteo", 
                 LastName = "Falasconi", 
                 Email = "matteo@falasconi.com",
@@ -115,42 +115,42 @@ public class CRUDCartItemTest : IDisposable {
         
         _context.ShoppingCarts.AddRange(
             new ShoppingCart {
-                CartId = 1, 
-                CustomerId = 1, 
+                CartId = 100, 
+                CustomerId = 100, 
                 DateCreated = DateTime.Now
             },
             new ShoppingCart {
-                CartId = 2, 
-                CustomerId = 2, 
+                CartId = 200, 
+                CustomerId = 200, 
                 DateCreated = DateTime.Now
             }
         );
         
         _context.CartItems.AddRange(
             new CartItem {
-                CartItemId = 1, 
-                CartId = 1, 
-                ProductId = 19, 
+                CartItemId = 100, 
+                CartId = 100, 
+                ProductId = 1900, 
                 Quantity = 1
             },
             new CartItem {
-                CartItemId = 2, 
-                CartId = 1, 
-                ProductId = 7, 
+                CartItemId = 200, 
+                CartId = 100, 
+                ProductId = 700, 
                 Quantity = 3
             },
             new CartItem 
             {
-                CartItemId = 3, 
-                CartId = 1, 
-                ProductId = 14, 
+                CartItemId = 300, 
+                CartId = 100, 
+                ProductId = 1400, 
                 Quantity = 1
             },
             new CartItem 
             {
-                CartItemId = 4, 
-                CartId = 2, 
-                ProductId = 2,
+                CartItemId = 400, 
+                CartId = 200, 
+                ProductId = 200,
                 Quantity = 2
             }
         );
@@ -177,9 +177,9 @@ public class CRUDCartItemTest : IDisposable {
     public async void Test_Create_CartItem() {
         // Arrange
         var cartItem = new CartItem {
-            CartItemId = 5,
-            CartId = 2,
-            ProductId = 2,
+            CartItemId = 500,
+            CartId = 200,
+            ProductId = 200,
             Quantity = 3
         };
         // Act
@@ -189,11 +189,11 @@ public class CRUDCartItemTest : IDisposable {
             .Customers
             .Include(c => c.ShoppingCart)
             .ThenInclude(shoppingCart => shoppingCart!.CartItems)
-            .First(c => c.ShoppingCart!.CartId == 2)
+            .First(c => c.ShoppingCart!.CartId == 200)
             .ShoppingCart;
         Assert.NotNull(customerShoppingCart!
             .CartItems
-            .FirstOrDefault(ci => ci.CartItemId == 5));
+            .FirstOrDefault(ci => ci.CartItemId == 500));
     }
     
     [Fact]
@@ -204,11 +204,11 @@ public class CRUDCartItemTest : IDisposable {
         var cartItems = await _cartItemRepository.Read();
         // Assert
         Assert.Equal(4, cartItems.Count);
-        Assert.Equal(1, cartItems
-            .First(sc => sc.CartItemId == 1)
+        Assert.Equal(100, cartItems
+            .First(sc => sc.CartItemId == 100)
             .Cart.CartId);
-        Assert.Equal(2, cartItems
-            .First(sc => sc.CartItemId == 4)
+        Assert.Equal(200, cartItems
+            .First(sc => sc.CartItemId == 400)
             .Cart.CartId);
     }
     
@@ -218,17 +218,17 @@ public class CRUDCartItemTest : IDisposable {
         var cartItem = _context
             .CartItems
             .Include(ci => ci.Cart)
-            .First(ci => ci.CartItemId == 1);
+            .First(ci => ci.CartItemId == 100);
         // Assert
         Assert.NotNull(cartItem);
-        Assert.Equal(1, cartItem.Cart.CartId);
+        Assert.Equal(100, cartItem.Cart.CartId);
         // Act
         cartItem.Quantity = 7;
         Assert.True(await _cartItemRepository.Update(cartItem));
         // Assert
         Assert.Equal(7, _context
             .CartItems
-            .First(ci => ci.CartItemId == 1)
+            .First(ci => ci.CartItemId == 100)
             .Quantity);
     }
 
@@ -238,7 +238,7 @@ public class CRUDCartItemTest : IDisposable {
         var cartItem = _context
             .CartItems
             .Include(ci => ci.Cart)
-            .First(ci => ci.CartItemId == 1);
+            .First(ci => ci.CartItemId == 100);
         var shoppingCart = cartItem.Cart;
         // Assert
         Assert.NotNull(cartItem);
@@ -248,10 +248,10 @@ public class CRUDCartItemTest : IDisposable {
         // Assert
         Assert.Null(_context
             .CartItems
-            .FirstOrDefault(ci => ci.CartItemId == 1));
+            .FirstOrDefault(ci => ci.CartItemId == 100));
         Assert.NotNull(_context
             .ShoppingCarts
-            .FirstOrDefault(sc => sc.CartId == 1));
+            .FirstOrDefault(sc => sc.CartId == 100));
     }
     
     [Fact]
@@ -259,16 +259,16 @@ public class CRUDCartItemTest : IDisposable {
         // Arrange
         // In Constructor
         // Act
-        var foundCartItem = await _cartItemRepository.Find(1);
+        var foundCartItem = await _cartItemRepository.Find(100);
         // Assert
         Assert.NotNull(foundCartItem);
         Assert.Equal(1, _context
             .CartItems
-            .First(ci => ci.CartItemId == 1)
+            .First(ci => ci.CartItemId == 100)
             .Quantity);
-        Assert.Equal(19, _context
+        Assert.Equal(1900, _context
             .CartItems
-            .First(ci => ci.CartItemId == 1)
+            .First(ci => ci.CartItemId == 100)
             .ProductId);
     }
 }

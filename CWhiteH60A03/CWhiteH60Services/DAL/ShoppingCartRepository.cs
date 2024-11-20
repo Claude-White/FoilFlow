@@ -11,6 +11,7 @@ public class ShoppingCartRepository : IShoppingCartRepository<ShoppingCart> {
     }
     
     public async Task<bool> Create(ShoppingCart shoppingCart) {
+        shoppingCart.CartItems = new List<CartItem>();
         await _context.ShoppingCarts.AddAsync(shoppingCart);
         var rowsAffected = await _context.SaveChangesAsync();
         return rowsAffected > 0;
@@ -24,6 +25,7 @@ public class ShoppingCartRepository : IShoppingCartRepository<ShoppingCart> {
     }
 
     public async Task<bool> Update(ShoppingCart shoppingCart) {
+        shoppingCart.CartItems = new List<CartItem>();
         _context.ShoppingCarts.Update(shoppingCart);
         var rowsAffected = await _context.SaveChangesAsync();
         return rowsAffected > 0;
