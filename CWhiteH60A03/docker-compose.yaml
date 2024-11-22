@@ -16,6 +16,7 @@
         depends_on:
             - api
             - store-db
+        restart: unless-stopped
         networks:
             - connect
 
