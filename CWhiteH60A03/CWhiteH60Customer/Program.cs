@@ -8,15 +8,15 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 /* Database Context Dependency Injection */
-// var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-// var dbName = Environment.GetEnvironmentVariable("DB_NAME");
-// var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
-// var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
-// builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
+builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
 /* ===================================== */
 
-var connectionString = builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'H60AssignmentDbCWContextConnection' not found.");
-builder.Services.AddDbContext<H60AssignmentDbCWContext>(options => options.UseSqlServer(connectionString));
+// var connectionString = builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'H60AssignmentDbCWContextConnection' not found.");
+// builder.Services.AddDbContext<H60AssignmentDbCWContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()

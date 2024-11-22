@@ -18,15 +18,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 /* Database Context Dependency Injection */
-// var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-// var dbName = Environment.GetEnvironmentVariable("DB_NAME");
-// var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
-// var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
-// builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
+builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
 /* ===================================== */
 
-builder.Services.AddDbContext<H60AssignmentDbCWContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
+// builder.Services.AddDbContext<H60AssignmentDbCWContext>(options =>
+//     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 
 builder.Services.AddScoped<IStoreRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IStoreRepository<ProductCategory>, ProdCatRepository>();

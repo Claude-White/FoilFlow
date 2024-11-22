@@ -45,7 +45,7 @@
         depends_on:
             - store-db
         environment:
-            - ASPNETCORE_ENVIRONMENT=Production
+            - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://*:5115
             - DB_HOST=store-db
             - DB_NAME=h60backend
