@@ -3,6 +3,8 @@
         build:
             context: ./CWhiteH60Store
             dockerfile: ./Dockerfile
+        labels:
+            - "coolify.main=true"
         ports:
             - 6117:8080
         environment:
