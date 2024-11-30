@@ -1,8 +1,10 @@
-﻿services:
+services:
     store:
         build:
             context: ./CWhiteH60Store
             dockerfile: ./Dockerfile
+        labels:
+            - "coolify.main=true"
         ports:
             - 6117:8080
         environment:
@@ -45,7 +47,7 @@
         depends_on:
             - store-db
         environment:
-            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_ENVIRONMENT=Production
             - ASPNETCORE_URLS=http://*:5115
             - DB_HOST=store-db
             - DB_NAME=h60backend
