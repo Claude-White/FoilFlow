@@ -59,6 +59,16 @@ public class CreateUserRolesAndAdminUsers {
                 };
                 dbContext.Customers.Add(customer);
                 dbContext.SaveChanges();
+                
+                var newCustomer = dbContext.Customers.FirstOrDefault(x => x.Email == customerUser.Email);
+                if (newCustomer != null) {
+                    var shoppingCart = new ShoppingCart {
+                        CustomerId = newCustomer.CustomerId,
+                        DateCreated = DateTime.Now,
+                    };
+                    dbContext.ShoppingCarts.Add(shoppingCart);
+                    dbContext.SaveChanges();
+                }
             }
         }
     }

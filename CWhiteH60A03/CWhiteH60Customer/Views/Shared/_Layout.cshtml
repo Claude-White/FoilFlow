@@ -22,8 +22,11 @@
                     <ul class="menu menu-horizontal p-0 items-center">
                         <li><a class="btn btn-ghost text-xl" asp-area="" asp-controller="Home" asp-action="Index">FoilFlow</a></li>
                         <li><a asp-controller="Product" asp-action="Index">Products</a></li>
-                        <partial name="_LoginPartial" />
+                        <partial name="_LoginPartial"/>
                     </ul>
+                    @if (User.IsInRole("customer")) {
+                        <a class="h-full w-full grid place-items-center" asp-controller="ShoppingCart" asp-action="ShoppingCart" asp-route-id="@(User.Claims.FirstOrDefault(c => c.Type == "CustomerId")?.Value)"><i data-lucide="shopping-cart"></i></a>
+                    }
                 </div>
                 @{
                     var actionName = ViewContext.RouteData.Values["action"]?.ToString();

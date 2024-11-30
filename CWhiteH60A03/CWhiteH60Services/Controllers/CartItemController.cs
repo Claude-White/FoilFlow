@@ -9,9 +9,11 @@ namespace CWhiteH60Services.Controllers;
 [ApiController]
 public class CartItemController : ControllerBase {
     private readonly ICartItemRepository<CartItem> _cartItemRepository;
+    private readonly ILogger<CartItemController> _logger;
 
-    public CartItemController(ICartItemRepository<CartItem> cartItemRepository) {
+    public CartItemController(ICartItemRepository<CartItem> cartItemRepository, ILogger<CartItemController> logger) {
         _cartItemRepository = cartItemRepository;
+        _logger = logger;
     }
     
     [HttpGet]
@@ -60,5 +62,49 @@ public class CartItemController : ControllerBase {
             return BadRequest(ModelState);
         }
         return NoContent();
+    }
+
+    [HttpPatch("BatchUpdateQuantity")]
+    public async Task<IActionResult> BatchUpdateQuantity([FromBody] List<CartItemUpdateDto> updates)
+    {
+        if (updates == null || !updates.Any())
+        {
+            return BadRequest("No updates provided");
+        }
+
+        try
+        {
+            foreach (var update in updates) {
+                var cartItem = await _cartItemRepository.Find(update.ItemId);
+                if (cartItem == null)
+                {
+                    return NotFound($"Cart item {update.ItemId} not found");
+                }
+
+                // Update quantity
+                cartItem.Quantity += update.QuantityChange;
+
+                // Remove item if quantity becomes zero or negative
+                if (cartItem.Quantity <= 0)
+                {
+                    await _cartItemRepository.Delete(cartItem);
+                }
+                
+                await _cartItemRepository.Update(cartItem);
+            }
+            
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return StatusCode(500, "An error occurred while updating cart items");
+        }
+    }
+    
+    public class CartItemUpdateDto
+    {
+        public int ItemId { get; set; }
+        public int QuantityChange { get; set; }
     }
 }

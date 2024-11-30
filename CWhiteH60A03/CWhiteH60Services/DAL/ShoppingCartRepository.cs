@@ -43,6 +43,15 @@ public class ShoppingCartRepository : IShoppingCartRepository<ShoppingCart> {
     public async Task<ShoppingCart> Find(int id) {
         return await _context
             .ShoppingCarts
+            .Include(sc => sc.CartItems)
             .FirstOrDefaultAsync(sc => sc.CartId == id);
+    }
+
+    public async Task<ShoppingCart> FindByCustomerId(int customerId) {
+        return await _context
+            .ShoppingCarts
+            .Include(sc => sc.CartItems)
+            .ThenInclude(ci => ci.Product)
+            .FirstOrDefaultAsync(sc => sc.CustomerId == customerId);
     }
 }

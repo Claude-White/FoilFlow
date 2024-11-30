@@ -27,11 +27,16 @@
             <input type="radio" name="rating-1" class="mask mask-star" />
             <input type="radio" name="rating-1" class="mask mask-star" checked="checked" />
         </div>
-        <p class="text-lg md:text-xl mt-2">Quantity:</p>
-        <input type="text" inputmode="numeric" pattern="[0-9]+" class="input input-bordered w-24 mt-1" value="1">
-        <div class="@(Model.Stock == 0 ? "text-red-600" : "text-green-600") text-lg md:text-xl flex gap-2 mt-2">@Html.Raw(Model.Stock == 0 ? "<i data-lucide='x'></i> Out of Stock" : "<i data-lucide='check'></i> In Stock")</div>
-        <button class="btn block md:w-[50%] w-full mt-4 rounded-full bg-[#1e89ee] mb-4 shadow-sm">Buy</button>
+        <form id="add-to-cart">
+            <p class="text-lg md:text-xl mt-2">Quantity:</p>
+            <input type="text" inputmode="numeric" pattern="[0-9]+" name="quantity" class="input input-bordered w-24 mt-1" value="1">
+            <div class="@(Model.Stock == 0 ? "text-red-600" : "text-green-600") text-lg md:text-xl flex gap-2 mt-2">@Html.Raw(Model.Stock == 0 ? "<i data-lucide='x'></i> Out of Stock" : "<i data-lucide='check'></i> In Stock")</div>
+            <input class="hidden" type="hidden" name="customerId" value="@(User.Claims.FirstOrDefault(c => c.Type == "CustomerId")?.Value)" />
+            <input class="hidden" type="hidden" name="productId" value="@Model.ProductId" />
+            <button class="btn block md:w-[50%] w-full mt-4 rounded-full bg-[#1e89ee] mb-4 shadow-sm">Add to Cart</button>
+        </form>
     </div>
 </div>
 
+<script type="module" src="~/js/shopping_cart.js"></script>
 <script type="module" src="~/js/blob_generator.js"></script>

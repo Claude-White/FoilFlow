@@ -1,0 +1,54 @@
+@model ShoppingCart
+
+<div class="overflow-x-auto mb-12 h-[45rem] px-4">
+    <table class="table table-pin-rows">
+        <thead>
+        <tr class="text-lg">
+            <th>
+                Product
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @if (Model.CartItems.Any()) {
+            @foreach (var product in Model.CartItems) {
+                <tr class="hover" data-item-id="@product.CartItemId">
+                    <td>
+                        @product.Product.Description
+                    </td>
+                    <td>
+                        <div class="join">
+                            <button class="join-item btn" onclick="incrementCartItem(@product.CartItemId, -1, @product.Price)">-</button>
+                            <div id="cart-item-quantity" class="join-item flex items-center justify-center px-4 py-2 rounded-none">
+                                @product.Quantity
+                            </div>
+                            <button class="join-item btn" onclick="incrementCartItem(@product.CartItemId, 1, @product.Price)">+</button>
+                        </div>
+                    </td>
+                    <td id="cart-item-price">
+                        @string.Format("${0:N0}", product.Price * product.Quantity)
+                    </td>
+                    <td>
+                        <button class="btn btn-sm hover:btn-error" onclick="removeCartItem(@product.CartItemId)">Remove</button>
+                    </td>
+                </tr>
+            }
+        }
+        else {
+            <tr>
+                <td>
+                    <h4 class="text-lg">No products in your shopping cart</h4>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <button class="btn btn-primary">Checkout</button>
+</div>
+
+<script type="module" src="~/js/cart_actions.js"></script>

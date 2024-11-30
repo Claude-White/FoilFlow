@@ -28,6 +28,15 @@ public class ShoppingCartController : ControllerBase {
         }
         return shoppingCart;
     }
+    
+    [HttpGet("CustomerId/{id}")]
+    public async Task<ActionResult<ShoppingCart>> FindCartByCustomerId(int id) {
+        var shoppingCart = await _shoppingCartRepository.FindByCustomerId(id);
+        if (shoppingCart == null) {
+            return NotFound();
+        }
+        return shoppingCart;
+    }
 
     [HttpPost]
     public async Task<ActionResult> CreateCart(ShoppingCartDto shoppingCartDto) {

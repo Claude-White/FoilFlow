@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "blobshape": "^1.0.0",
+    "notyf": "^3.10.0",
     "preline": "^2.5.1"
   }
 }

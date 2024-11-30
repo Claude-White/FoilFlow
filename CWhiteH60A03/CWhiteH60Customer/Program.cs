@@ -11,12 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
 var dbName = Environment.GetEnvironmentVariable("DB_NAME");
 var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
-var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
-builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
+
+if (dbHost == null || dbName == null || dbPassword == null) {
+    var connectionString = builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'H60AssignmentDbCWContextConnection' not found.");
+    builder.Services.AddDbContext<H60AssignmentDbCWContext>(options => options.UseSqlServer(connectionString));
+}
+else {
+    var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};User ID=sa;Password={dbPassword};TrustServerCertificate=True;";
+    builder.Services.AddDbContext<H60AssignmentDbCWContext>(opt => opt.UseSqlServer(connectionString));
+}
 /* ===================================== */
 
-// var connectionString = builder.Configuration.GetConnectionString("MyConnection") ?? throw new InvalidOperationException("Connection string 'H60AssignmentDbCWContextConnection' not found.");
-// builder.Services.AddDbContext<H60AssignmentDbCWContext>(options => options.UseSqlServer(connectionString));
+
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
@@ -39,6 +45,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IProductRepository<Product>, ProductRepository>();
 builder.Services.AddScoped<IStoreRepository<ProductCategory>, ProdCatRepository>();
 builder.Services.AddScoped<ICustomerRepository<Customer>, CustomerRepository>();
+builder.Services.AddScoped<IShoppingCartRepository<ShoppingCart>, ShoppingCartRepository>();
+builder.Services.AddScoped<ICartItemRepository<CartItem>, CartItemRepository>();
 builder.Services.AddScoped<IPartialViewUtility, PartialViewUtility>();
 
 builder.Services.AddHttpClient();

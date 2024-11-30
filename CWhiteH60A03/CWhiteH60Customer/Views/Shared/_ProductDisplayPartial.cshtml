@@ -1,5 +1,9 @@
 @model IEnumerable<CWhiteH60Customer.Models.DataTransferObjects.CustomerProductDto>
 
+@{
+    var customerId = User.Claims.FirstOrDefault(c => c.Type == "CustomerId")?.Value;
+}
+
 <div class="grid gap-4 grid-cols-responsive justify-items-center w-[80%] mx-auto pb-24" id="productsList">
     @if (!Model.Any()) {
         <h2>No Products Found</h2>
@@ -18,7 +22,12 @@
                     <p class="opacity-75 truncate">@product.Manufacturer</p>
                     <p class="mb-3 truncate">Price: @($"{product.SellPrice:N0}$")</p>
                 </a>
-                <button class="btn bg-primary rounded-3xl px-4 text-white">Buy</button>
+                <form class="add-to-cart">
+                    <input class="hidden" type="hidden" name="quantity" value="1">
+                    <input class="hidden" type="hidden" name="customerId" value="@customerId" />
+                    <input class="hidden" type="hidden" name="productId" value="@product.ProductId" />
+                    <button class="btn bg-primary rounded-3xl px-4 text-white">Add to Cart</button>
+                </form>
             </div>
         }
     }

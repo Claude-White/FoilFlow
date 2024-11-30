@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CWhiteH60Customer.DAL;
 using CWhiteH60Customer.Models;
@@ -22,12 +23,14 @@ namespace CWhiteH60Customer.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
         private readonly ICustomerRepository<Customer> _customerRepository;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, ICustomerRepository<Customer> customerRepository)
+        public LoginModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, ILogger<LoginModel> logger, ICustomerRepository<Customer> customerRepository)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
             _customerRepository = customerRepository;
         }
@@ -111,9 +114,11 @@ namespace CWhiteH60Customer.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+            Customer customer = null;
+
             var customers = await _customerRepository.GetAll();
             if (customers.Any()) {
-                var customer = customers.FirstOrDefault(c => c.Email == Input.Email);
+                customer = customers.FirstOrDefault(c => c.Email == Input.Email);
                 if (customer == null) {
                     ModelState.AddModelError(string.Empty, "Only customers are allowed");
                 }
@@ -127,8 +132,21 @@ namespace CWhiteH60Customer.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-                if (result.Succeeded)
-                {
+                if (result.Succeeded) {
+
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null) {
+                        // Check if the claim already exists
+                        var claims = await _userManager.GetClaimsAsync(user);
+                        if (claims.All(c => c.Type != "CustomerId")) {
+                            await _userManager.AddClaimAsync(user, new Claim("CustomerId", $"{customer!.CustomerId}"));
+                        }
+
+                        // Refresh the user's sign-in to include the new claim
+                        await _signInManager.SignOutAsync();
+                        await _signInManager.SignInAsync(user, isPersistent: Input.RememberMe);
+                    }
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
