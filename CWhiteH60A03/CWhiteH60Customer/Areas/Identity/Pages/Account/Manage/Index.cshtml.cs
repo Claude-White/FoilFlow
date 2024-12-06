@@ -84,7 +84,6 @@ namespace CWhiteH60Customer.Areas.Identity.Pages.Account.Manage
             [StringLength(2)]
             public string? Province { get; set; }
             
-            [CreditCard]
             [StringLength(16)]
             [Display(Name = "Credit Card")]
             public string? CreditCard { get; set; }

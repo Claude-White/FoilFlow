@@ -1,4 +1,5 @@
 using CWhiteH60Services.Models;
+using CWhiteH60Services.Models.DataTransferObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace CWhiteH60Services.DAL;
@@ -28,6 +29,23 @@ public class ProductRepository : IStoreRepository<Product> {
             .OrderBy(p => p.ProdCat.ProdCat)
             .ThenBy(p => p.Description)
             .ToList();
+    }
+
+    public async Task<List<ProductDto>> GetAllNoImages() {
+        return await _context.Products
+            .Include(p => p.ProdCat)
+            .OrderBy(p => p.ProdCat.ProdCat)
+            .ThenBy(p => p.Description)
+            .Select(p => new ProductDto(p))
+            .ToListAsync();
+    }
+
+    public async Task<ImageDto> GetImageByProductId(int id) {
+        return await _context.Products
+            .Where(product => product.ProductId == id)
+            .Select(product => new ImageDto(product))
+            .FirstOrDefaultAsync();
+
     }
     
     public async Task<Product> GetById(int id) {

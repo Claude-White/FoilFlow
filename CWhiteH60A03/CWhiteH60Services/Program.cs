@@ -1,3 +1,5 @@
+using CWhiteH60Services.CalculateTaxes;
+using CWhiteH60Services.CheckCreditCard;
 using CWhiteH60Services.DAL;
 using CWhiteH60Services.Models;
 using Microsoft.AspNetCore.Identity;
@@ -33,10 +35,21 @@ else {
 /* ===================================== */
 
 builder.Services.AddScoped<IStoreRepository<Product>, ProductRepository>();
+builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<IStoreRepository<ProductCategory>, ProdCatRepository>();
 builder.Services.AddScoped<ICustomerRepository<Customer>, CustomerRepository>();
 builder.Services.AddScoped<IShoppingCartRepository<ShoppingCart>, ShoppingCartRepository>();
 builder.Services.AddScoped<ICartItemRepository<CartItem>, CartItemRepository>();
+builder.Services.AddScoped<IOrderRepository<Order>, OrderRepository>();
+builder.Services.AddScoped<CheckCreditCardSoapClient>(serviceProvider => {
+    var endpointConfiguration = CheckCreditCardSoapClient.EndpointConfiguration.CheckCreditCardSoap;
+    return new CheckCreditCardSoapClient(endpointConfiguration);
+});
+builder.Services.AddScoped<CalculateTaxesSoapClient>(serviceProvider => {
+    var endpointConfiguration = CalculateTaxesSoapClient.EndpointConfiguration.CalculateTaxesSoap;
+    return new CalculateTaxesSoapClient(endpointConfiguration);
+});
+builder.Services.AddScoped<IOrderItemRepository<OrderItem>, OrderItemRepository>();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => {
         options.SignIn.RequireConfirmedAccount = true;
@@ -70,8 +83,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
     app.UseSwagger(options => options.RouteTemplate = "openapi/{documentName}.json");
     app.MapScalarApiReference();
-    // app.UseSwagger();
-    // app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

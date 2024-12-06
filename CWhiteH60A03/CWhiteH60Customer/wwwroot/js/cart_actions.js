@@ -107,6 +107,7 @@ function scheduleCartUpdate() {
             quantityChange: update.quantity
         }));
         
+        let specialError = null;
         fetch('http://localhost:5115/api/CartItem/BatchUpdateQuantity', {
             method: 'PATCH',
             headers: {
@@ -114,12 +115,20 @@ function scheduleCartUpdate() {
             },
             body: JSON.stringify(batchUpdatePayload)
         })
-            .then(response => {
+            .then(async response => {
                 if (!response.ok) {
                     throw new Error('Batch update failed');
                 }
-                
-                notyf.success('Cart updated successfully');
+
+                const errorMessage = await response.text();
+                if (errorMessage) {
+                    specialError = errorMessage;
+                    throw new Error(errorMessage);
+                }
+                else {
+                    updatePrices();
+                    notyf.success('Cart updated successfully');
+                }
 
                 // Reset quantities on success
                 updatesToSend.forEach(([itemId]) => {
@@ -127,8 +136,12 @@ function scheduleCartUpdate() {
                 });
             })
             .catch(error => {
-                console.error('Batch update error:', error);
-                notyf.error('Failed to update cart quantities');
+                if (specialError) {
+                    notyf.error(specialError);
+                }
+                else {
+                    notyf.error('Failed to update cart quantities');
+                }
 
                 // Revert changes if error
                 updatesToSend.forEach(([itemId, update]) => {

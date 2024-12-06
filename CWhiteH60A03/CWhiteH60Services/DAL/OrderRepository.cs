@@ -36,7 +36,7 @@ public class OrderRepository : IOrderRepository<Order> {
         return await _context.Orders
             .Include(o => o.OrderItems)
             .Include(o => o.Customer)
-            .Where(o => (o.Customer.FirstName + " " + o.Customer.LastName) == customerName)
+            .Where(o => (o.Customer.FirstName + " " + o.Customer.LastName).Equals(customerName, StringComparison.InvariantCultureIgnoreCase))
             .ToListAsync();
     }
 

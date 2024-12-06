@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CWhiteH60Services.Models.DataTransferObjects;
 using Newtonsoft.Json;
 
 namespace CWhiteH60Services.Models;
@@ -23,4 +24,16 @@ public partial class Order
 
     [JsonIgnore]
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+    public Order() {
+    }
+
+    public Order(OrderDto orderDto) {
+        OrderId = orderDto.OrderId;
+        CustomerId = orderDto.CustomerId;
+        DateCreated = orderDto.DateCreated;
+        DateFulfilled = orderDto.DateFulfilled;
+        Total = orderDto.Total;
+        Taxes = orderDto.Taxes;
+    }
 }

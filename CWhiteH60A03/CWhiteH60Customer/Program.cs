@@ -47,6 +47,8 @@ builder.Services.AddScoped<IStoreRepository<ProductCategory>, ProdCatRepository>
 builder.Services.AddScoped<ICustomerRepository<Customer>, CustomerRepository>();
 builder.Services.AddScoped<IShoppingCartRepository<ShoppingCart>, ShoppingCartRepository>();
 builder.Services.AddScoped<ICartItemRepository<CartItem>, CartItemRepository>();
+builder.Services.AddScoped<IOrderRepository<Order>, OrderRepository>();
+builder.Services.AddScoped<IOrderItemRepository<OrderItem>, OrderItemRepository>();
 builder.Services.AddScoped<IPartialViewUtility, PartialViewUtility>();
 
 builder.Services.AddHttpClient();

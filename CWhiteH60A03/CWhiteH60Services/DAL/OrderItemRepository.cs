@@ -14,6 +14,11 @@ public class OrderItemRepository : IOrderItemRepository<OrderItem> {
         orderItem.Order = null;
         orderItem.Product = null;
         await _context.OrderItems.AddAsync(orderItem);
+        var order = _context.Orders.FirstOrDefault(o => o.OrderId == orderItem.OrderId);
+        var cartItem = _context.CartItems.Include(ci => ci.Cart).FirstOrDefault(x => x.ProductId == orderItem.ProductId && order.CustomerId == x.Cart.CustomerId);
+        if (cartItem != null) {
+            _context.CartItems.Remove(cartItem);
+        }
         return await _context.SaveChangesAsync() > 0;
     }
 

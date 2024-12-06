@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CWhiteH60Services.Models.DataTransferObjects;
 using Newtonsoft.Json;
 
 namespace CWhiteH60Services.Models;
@@ -21,4 +22,21 @@ public partial class OrderItem
 
     [JsonIgnore]
     public virtual Product Product { get; set; } = null!;
+    
+    public OrderItem() {
+    }
+
+    public OrderItem(OrderItemDto orderItemDto) {
+        OrderItemId = orderItemDto.OrderItemId;
+        OrderId = orderItemDto.OrderId;
+        ProductId = orderItemDto.ProductId;
+        Quantity = orderItemDto.Quantity;
+        Price = orderItemDto.Price;
+    }
+
+    public OrderItem(CartItem cartItem) {
+        ProductId = cartItem.ProductId;
+        Quantity = cartItem.Quantity;
+        Price = cartItem.Price;
+    }
 }

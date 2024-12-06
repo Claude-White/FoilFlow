@@ -14,9 +14,9 @@ namespace CWhiteH60Services.Controllers;
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    private readonly IStoreRepository<Product> _storeRepository;
+    private readonly ProductRepository _storeRepository;
 
-    public ProductsController(IStoreRepository<Product> storeRepo)
+    public ProductsController(ProductRepository storeRepo)
     {
         _storeRepository = storeRepo;
     }
@@ -28,6 +28,21 @@ public class ProductsController : ControllerBase
             return _storeRepository.GetAll().Where(p => p.Description.Contains(productName, StringComparison.InvariantCultureIgnoreCase) || p.ProdCat.ProdCat.Contains(productName, StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
         return _storeRepository.GetAll().ToList();
+    }
+
+    [HttpGet("Manager")]
+    public async Task<ActionResult<List<ProductDto>>> GetAllProducts([FromQuery] string? productName) {
+        if (!string.IsNullOrEmpty(productName)) {
+            return (await _storeRepository.GetAllNoImages())
+                .Where(p => p.Description.Contains(productName, StringComparison.InvariantCultureIgnoreCase) || p.ProdCategory.ProdCat.Contains(productName, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+        }
+        return await _storeRepository.GetAllNoImages();
+    }
+
+    [HttpGet("Image/{id}")]
+    public async Task<ActionResult<ImageDto>> GetImageByProductId(int id) {
+        return await _storeRepository.GetImageByProductId(id);
     }
 
     [HttpGet("/api/ProductsByCategory/{id:int}")]
@@ -82,18 +97,18 @@ public class ProductsController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<ActionResult<Product>> Create(ProductDto productDto) {
+    public async Task<ActionResult<Product>> Create(ProductImageDto productImageDto) {
         var product = new Product() {
-            ProductId = productDto.ProductId,
-            ProdCatId = productDto.ProdCatId,
-            Description = productDto.Description,
-            Manufacturer = productDto.Manufacturer,
-            Stock = productDto.Stock,
-            BuyPrice = productDto.BuyPrice,
-            SellPrice = productDto.SellPrice,
-            Notes = productDto.Notes,
-            ImageName = productDto.ImageName,
-            ImageData = productDto.ImageData
+            ProductId = productImageDto.ProductId,
+            ProdCatId = productImageDto.ProdCatId,
+            Description = productImageDto.Description,
+            Manufacturer = productImageDto.Manufacturer,
+            Stock = productImageDto.Stock,
+            BuyPrice = productImageDto.BuyPrice,
+            SellPrice = productImageDto.SellPrice,
+            Notes = productImageDto.Notes,
+            ImageName = productImageDto.ImageName,
+            ImageData = productImageDto.ImageData
         };
 
         if (ModelState.IsValid)
@@ -107,18 +122,18 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<ActionResult<Product>> Edit(int id, ProductDto productDto) {
+    public async Task<ActionResult<Product>> Edit(int id, ProductImageDto productImageDto) {
         var product = new Product() {
-            ProductId = productDto.ProductId,
-            ProdCatId = productDto.ProdCatId,
-            Description = productDto.Description,
-            Manufacturer = productDto.Manufacturer,
-            BuyPrice = productDto.BuyPrice,
-            SellPrice = productDto.SellPrice,
-            Stock = productDto.Stock,
-            Notes = productDto.Notes,
-            ImageName = productDto.ImageName,
-            ImageData = productDto.ImageData
+            ProductId = productImageDto.ProductId,
+            ProdCatId = productImageDto.ProdCatId,
+            Description = productImageDto.Description,
+            Manufacturer = productImageDto.Manufacturer,
+            BuyPrice = productImageDto.BuyPrice,
+            SellPrice = productImageDto.SellPrice,
+            Stock = productImageDto.Stock,
+            Notes = productImageDto.Notes,
+            ImageName = productImageDto.ImageName,
+            ImageData = productImageDto.ImageData
         };
         
         if (id != product.ProductId)

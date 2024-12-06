@@ -17,12 +17,25 @@
                         <i data-lucide="align-justify"></i>
                     </label>
                 </div>
-                <div class="hidden flex-1 md:block">
-                    <ul class="menu menu-horizontal p-0 items-center text-white">
-                        <li><a class="btn btn-ghost text-xl" asp-area="" asp-controller="Home" asp-action="Index">FoilFlow</a></li>
-                        <li><a asp-controller="Product" asp-action="Index" class="text-white">Products</a></li>
-                        <partial name="_LoginPartial"/>
-                    </ul>
+                <div class="hidden md:block flex-1">
+                    <!-- Left-aligned menu -->
+                    <div class="flex justify-between items-center">
+                        <ul class="menu menu-horizontal p-0 items-center text-white">
+                            <li><a class="btn btn-ghost text-xl" asp-area="" asp-controller="Home" asp-action="Index">FoilFlow</a></li>
+                            <li><a asp-controller="Product" asp-action="Index" class="text-white">Products</a></li>
+                            <partial name="_LoginPartial" />
+                        </ul>
+
+                        <!-- Right-aligned shopping cart -->
+                        @if (User.IsInRole("customer")) {
+                            <a class="h-full w-10 grid place-items-center btn btn-ghost text-white"
+                               asp-controller="ShoppingCart"
+                               asp-action="ShoppingCart"
+                               asp-route-id="@(User.Claims.FirstOrDefault(c => c.Type == "CustomerId")?.Value)">
+                                <i data-lucide="shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

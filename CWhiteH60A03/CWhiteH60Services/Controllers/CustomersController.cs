@@ -39,7 +39,7 @@ public class CustomersController : ControllerBase {
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Customer>> Details(int id) {
-        var customer = await _customerRepository.GetById(id);
+        var customer = await _customerRepository.GetByIdInclude(id);
         if (customer == null) {
             return NotFound();
         }

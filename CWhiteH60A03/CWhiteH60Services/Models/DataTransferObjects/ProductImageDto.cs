@@ -1,6 +1,6 @@
 namespace CWhiteH60Services.Models.DataTransferObjects;
 
-public class ProductDto {
+public class ProductImageDto {
     public int ProductId { get; set; }
     public int ProdCatId { get; set; }
     public ProductCategoryDto ProdCategory { get; set; }
@@ -10,11 +10,13 @@ public class ProductDto {
     public decimal BuyPrice { get; set; }
     public decimal SellPrice { get; set; }
     public string? Notes { get; set; }
+    public string? ImageName { get; set; }
+    public byte[]? ImageData { get; set; }
 
-    public ProductDto() {
+    public ProductImageDto() {
     }
 
-    public ProductDto(Product product) {
+    public ProductImageDto(Product product) {
         ProductId = product.ProductId;
         ProdCatId = product.ProdCatId;
         ProdCategory = new ProductCategoryDto(product.ProdCat);
@@ -24,5 +26,7 @@ public class ProductDto {
         BuyPrice = product.BuyPrice;
         SellPrice = product.SellPrice;
         Notes = product.Notes;
+        ImageName = product.ImageName;
+        ImageData = product.ImageData;
     }
 }

@@ -9,7 +9,7 @@ public partial class Order
 
     public int CustomerId { get; set; }
 
-    public DateTime? DateCreated { get; set; }
+    public DateTime DateCreated { get; set; }
 
     public DateTime? DateFulfilled { get; set; }
 

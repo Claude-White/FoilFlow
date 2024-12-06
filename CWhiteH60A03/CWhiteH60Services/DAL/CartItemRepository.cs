@@ -37,7 +37,7 @@ public class CartItemRepository : ICartItemRepository<CartItem> {
 
     public async Task<bool> Update(CartItem cartItem) {
         var product = await _context.Products.FindAsync(cartItem.ProductId);
-        var oldCartItem = await _context.CartItems.FindAsync(cartItem.CartItemId);
+        var oldCartItem = await _context.CartItems.AsNoTracking().FirstOrDefaultAsync(ci => ci.CartItemId == cartItem.CartItemId);
         if (product == null || oldCartItem == null) {
             return false;
         }

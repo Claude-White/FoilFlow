@@ -9,11 +9,11 @@ namespace CWhiteH60Services.Controllers;
 [ApiController]
 public class CartItemController : ControllerBase {
     private readonly ICartItemRepository<CartItem> _cartItemRepository;
-    private readonly ILogger<CartItemController> _logger;
+    private readonly IStoreRepository<Product> _storeRepository;
 
-    public CartItemController(ICartItemRepository<CartItem> cartItemRepository, ILogger<CartItemController> logger) {
+    public CartItemController(ICartItemRepository<CartItem> cartItemRepository, IStoreRepository<Product> storeRepository) {
         _cartItemRepository = cartItemRepository;
-        _logger = logger;
+        _storeRepository = storeRepository;
     }
     
     [HttpGet]
@@ -65,28 +65,28 @@ public class CartItemController : ControllerBase {
     }
 
     [HttpPatch("BatchUpdateQuantity")]
-    public async Task<IActionResult> BatchUpdateQuantity([FromBody] List<CartItemUpdateDto> updates)
-    {
-        if (updates == null || !updates.Any())
-        {
+    public async Task<IActionResult> BatchUpdateQuantity([FromBody] List<CartItemUpdateDto> updates) {
+        if (updates == null || !updates.Any()) {
             return BadRequest("No updates provided");
         }
 
-        try
-        {
+        try {
             foreach (var update in updates) {
                 var cartItem = await _cartItemRepository.Find(update.ItemId);
-                if (cartItem == null)
-                {
+                if (cartItem == null) {
                     return NotFound($"Cart item {update.ItemId} not found");
                 }
-
-                // Update quantity
+                
                 cartItem.Quantity += update.QuantityChange;
+                
+                var product = await _storeRepository.GetById(cartItem.ProductId);
+                product.Stock -= update.QuantityChange;
 
-                // Remove item if quantity becomes zero or negative
-                if (cartItem.Quantity <= 0)
-                {
+                if (product.Stock < 0) {
+                    return Ok($"Product ({product.Description}) out of stock");
+                }
+                
+                if (cartItem.Quantity <= 0) {
                     await _cartItemRepository.Delete(cartItem);
                 }
                 
@@ -95,16 +95,8 @@ public class CartItemController : ControllerBase {
             
             return Ok();
         }
-        catch (Exception ex)
-        {
-            // Log the exception
+        catch (Exception ex) {
             return StatusCode(500, "An error occurred while updating cart items");
         }
-    }
-    
-    public class CartItemUpdateDto
-    {
-        public int ItemId { get; set; }
-        public int QuantityChange { get; set; }
     }
 }

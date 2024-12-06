@@ -33,9 +33,10 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
+    
 
-    <!-- <Target Name="Tailwindcss" BeforeTargets="Build">
+    <Target Name="Tailwindcss" BeforeTargets="Build">
         <Exec Command="npm run tailwind:build" />
-    </Target> -->
+    </Target>
 
 </Project>
