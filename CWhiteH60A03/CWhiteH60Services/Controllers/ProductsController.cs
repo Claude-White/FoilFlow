@@ -205,18 +205,35 @@ public class ProductsController : ControllerBase
     [HttpPatch("Price/{id:int}")]
     public async Task<ActionResult<Product>> EditPrice(int id, ProductPriceDto productPriceDto)
     {
-        if (id != productPriceDto.ProductId)
-        {
+        if (id != productPriceDto.ProductId) {
             return NotFound();
         }
         
         var product = await _storeRepository.GetById(id);
-        
-        product.BuyPrice = productPriceDto.BuyPrice;
-        product.SellPrice = productPriceDto.SellPrice;
 
+        if (productPriceDto.BuyPrice != 0 && productPriceDto.SellPrice != 0) {
+            if (productPriceDto.SellPrice <= productPriceDto.BuyPrice) {
+                ModelState.AddModelError("Price", "Sell price must be greater than the buy price.");
+            }
+        }
+        else {
+            if (productPriceDto.BuyPrice != 0 && productPriceDto.BuyPrice >= product.SellPrice) {
+                ModelState.AddModelError("Price", "Buy price must be less than the sell price.");
+            }
+
+            if (productPriceDto.SellPrice != 0 && productPriceDto.SellPrice <= product.BuyPrice) {
+                ModelState.AddModelError("Price", "Sell price must be greater than the buy price.");
+            }
+        }
+        
         if (ModelState.IsValid)
         {
+            if (productPriceDto.BuyPrice != 0) {
+                product.BuyPrice = productPriceDto.BuyPrice;
+            }
+            if (productPriceDto.SellPrice != 0) {
+                product.SellPrice = productPriceDto.SellPrice;
+            }
             try
             {
                 await _storeRepository.Update(product);
@@ -236,7 +253,6 @@ public class ProductsController : ControllerBase
             
             return Ok(product);
         }
-
         return BadRequest(ModelState);
     }
 

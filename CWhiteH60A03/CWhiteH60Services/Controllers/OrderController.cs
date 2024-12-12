@@ -15,8 +15,8 @@ public class OrderController : ControllerBase {
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Order>>> AllOrders() {
-        return await _orderRepository.Read();
+    public async Task<ActionResult<List<OrderDto>>> AllOrders() {
+        return (await _orderRepository.Read()).Select(o => new OrderDto(o)).ToList();
     }
     
     [HttpGet("{id}")]
@@ -29,8 +29,8 @@ public class OrderController : ControllerBase {
     }
     
     [HttpGet("Date/{date}")]
-    public async Task<ActionResult<List<Order>>> OrdersByDate(DateTime date) {
-        var orders = await _orderRepository.ReadByDate(date);
+    public async Task<ActionResult<List<OrderDto>>> OrdersByDate(DateTime date) {
+        var orders = (await _orderRepository.ReadByDate(date)).Select(o => new OrderDto(o)).ToList();
         if (orders == null) {
             return NotFound();
         }
@@ -38,8 +38,8 @@ public class OrderController : ControllerBase {
     }
     
     [HttpGet("Name/{customerName}")]
-    public async Task<ActionResult<List<Order>>> OrdersByCustomerName(string customerName) {
-        var orders = await _orderRepository.ReadByCustomer(customerName);
+    public async Task<ActionResult<List<OrderDto>>> OrdersByCustomerName(string customerName) {
+        var orders = (await _orderRepository.ReadByCustomer(customerName)).Select(o => new OrderDto(o)).ToList();
         if (orders == null) {
             return NotFound();
         }
@@ -47,8 +47,8 @@ public class OrderController : ControllerBase {
     }
     
     [HttpGet("Id/{customerId}")]
-    public async Task<ActionResult<List<Order>>> OrdersByCustomerId(int customerId) {
-        var orders = await _orderRepository.ReadByCustomer(customerId);
+    public async Task<ActionResult<List<OrderDto>>> OrdersByCustomerId(int customerId) {
+        var orders = (await _orderRepository.ReadByCustomer(customerId)).Select(o => new OrderDto(o)).ToList();;
         if (orders == null) {
             return NotFound();
         }
@@ -57,6 +57,7 @@ public class OrderController : ControllerBase {
 
     [HttpPost]
     public async Task<ActionResult> CreateOrder(OrderDto orderDto) {
+        ModelState.Remove("Customer");
         if (!ModelState.IsValid) {
             return BadRequest(ModelState);
         }

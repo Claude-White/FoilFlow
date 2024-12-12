@@ -35,4 +35,17 @@ public class CustomerDto {
     public string? UserId { get; set; }
     
     public string? Password { get; set; }
+
+    public CustomerDto() {
+    }
+
+    public CustomerDto(Customer customer) {
+        CustomerId = customer.CustomerId;
+        FirstName = customer.FirstName;
+        LastName = customer.LastName;
+        Email = customer.Email;
+        PhoneNumber = customer.PhoneNumber;
+        Province = customer.Province;
+        CreditCard = customer.CreditCard;
+    }
 }

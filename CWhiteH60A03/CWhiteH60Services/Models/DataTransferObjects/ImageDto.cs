@@ -11,4 +11,4 @@ public class ImageDto {
         ImageName = product.ImageName;
         ImageData = product.ImageData;
     }
-}
+}   

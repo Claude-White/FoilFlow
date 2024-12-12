@@ -83,7 +83,7 @@ public class ShoppingCartController : Controller {
         
         var subTotal = shoppingCart.CartItems.Sum(ci => ci.Price * ci.Quantity);
 
-        var taxes = 0;
+        var taxes = 0m;
 
         using (var client = new HttpClient()) {
             client.DefaultRequestHeaders.Clear();
@@ -97,7 +97,7 @@ public class ShoppingCartController : Controller {
                 return View("ShoppingCart", shoppingCart);
             }
             var responseString = await response.Content.ReadAsStringAsync();
-            taxes = int.TryParse(responseString, out var result) ? result : 0;
+            taxes = decimal.TryParse(responseString, out var result) ? result : 0m;
         }
 
         var now = DateTime.Now;

@@ -12,6 +12,8 @@ public class OrderDto {
     public decimal? Total { get; set; }
 
     public decimal? Taxes { get; set; }
+    
+    public CustomerDto? Customer { get; set; }
 
     public OrderDto() {
     }
@@ -23,5 +25,6 @@ public class OrderDto {
         DateFulfilled = order.DateFulfilled;
         Total = order.Total;
         Taxes = order.Taxes;
+        Customer = new CustomerDto(order.Customer);
     }
 }

@@ -33,10 +33,12 @@ public class OrderRepository : IOrderRepository<Order> {
     }
 
     public async Task<List<Order>> ReadByCustomer(string customerName) {
+        var normalizedCustomerName = customerName.ToLowerInvariant();
+    
         return await _context.Orders
             .Include(o => o.OrderItems)
             .Include(o => o.Customer)
-            .Where(o => (o.Customer.FirstName + " " + o.Customer.LastName).Equals(customerName, StringComparison.InvariantCultureIgnoreCase))
+            .Where(o => (o.Customer.FirstName.ToLower() + " " + o.Customer.LastName.ToLower()) == normalizedCustomerName)
             .ToListAsync();
     }
 
