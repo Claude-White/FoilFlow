@@ -36,7 +36,7 @@
                     buyPrice.includes(lowercasedSearch) ||
                     sellPrice.includes(lowercasedSearch)
                 );
-            })
+            }),
         );
     };
 
@@ -44,7 +44,7 @@
         const resp = await fetch(src);
         if (!resp.ok) {
             throw new Error(
-                `Failed to fetch image from ${src}, status: ${resp.status}`
+                `Failed to fetch image from ${src}, status: ${resp.status}`,
             );
         }
         const blob: ImageDto = await resp.json();
@@ -70,13 +70,13 @@
         let sellPrice = 0;
 
         if (selectedType === ModalType.Stock) {
-            requestURL = `http://localhost:5115/api/Products/Stock/${selectedProductId}`;
+            requestURL = `https://api-foilflow.claudewhite.live/api/Products/Stock/${selectedProductId}`;
             stock = Number(selectedValue) || 0;
         } else if (selectedType === ModalType.BuyPrice) {
-            requestURL = `http://localhost:5115/api/Products/Price/${selectedProductId}`;
+            requestURL = `https://api-foilflow.claudewhite.live/api/Products/Price/${selectedProductId}`;
             buyPrice = Number(selectedValue) || 0;
         } else if (selectedType === ModalType.SellPrice) {
-            requestURL = `http://localhost:5115/api/Products/Price/${selectedProductId}`;
+            requestURL = `https://api-foilflow.claudewhite.live/api/Products/Price/${selectedProductId}`;
             sellPrice = Number(selectedValue) || 0;
         }
 
@@ -107,7 +107,9 @@
     };
 
     const fetchProducts = async () => {
-        const res = await fetch("http://localhost:5115/api/Products/Manager");
+        const res = await fetch(
+            "https://api-foilflow.claudewhite.live/api/Products/Manager",
+        );
         const data = await res.json();
         products = data.$values;
         filteredProducts.set(products);
@@ -172,7 +174,7 @@
                 <tr data-product-id={product.productId}>
                     <td class="hidden h-16 lg:table-cell">
                         <div class="flex items-center justify-center h-full">
-                            {#await preload(`http://localhost:5115/api/Products/Image/${product.productId}`)}
+                            {#await preload(`https://api-foilflow.claudewhite.live/api/Products/Image/${product.productId}`)}
                                 <div
                                     class="w-16 placeholder-circle animate-pulse"
                                 ></div>
@@ -227,7 +229,7 @@
                                     editModal(
                                         ModalType.Stock,
                                         product.productId,
-                                        product.stock
+                                        product.stock,
                                     )}
                                 class="btn-icon variant-filled variant-soft"
                             >
@@ -244,7 +246,7 @@
                                     editModal(
                                         ModalType.BuyPrice,
                                         product.productId,
-                                        product.buyPrice
+                                        product.buyPrice,
                                     )}
                                 class="btn-icon variant-filled variant-soft"
                             >
@@ -261,7 +263,7 @@
                                     editModal(
                                         ModalType.SellPrice,
                                         product.productId,
-                                        product.sellPrice
+                                        product.sellPrice,
                                     )}
                                 class="btn-icon variant-filled variant-soft"
                             >
