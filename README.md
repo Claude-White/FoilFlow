@@ -40,6 +40,14 @@ Web API: http://localhost:5115 (for this you need to go to /api/Products/Manager
 Manager: http://localhost:3000
 
 ## Users
-**Customer**: customer@gmail.com ?Customer1!  
-**Clerk**: clerk@gmail.com ?Clerk1!  
-**Manager**: manager@gmail.com ?Manager1!
+**Customer**:
+- Username: customer@gmail.com
+- Password: ?Customer1!
+ 
+**Clerk**:
+- Username: clerk@gmail.com
+- Password: ?Clerk1!
+  
+**Manager**:
+- Username: manager@gmail.com
+- Password: ?Manager1!
