@@ -1,5 +1,11 @@
 # Assignment 3 - Claude White
 
+## Links
+- store-foilflow.claudewhite.live
+- customer-foilflow.claudewhite.live
+- manager-foilflow.claudewhite.live
+- api-foilflow.claudewhite.live
+
 ## Instructions
 
 1. Clone the repository
