@@ -1,10 +1,10 @@
 # Assignment 3 - Claude White
 
 ## Links
-- store-foilflow.claudewhite.live
-- customer-foilflow.claudewhite.live
-- manager-foilflow.claudewhite.live
-- api-foilflow.claudewhite.live
+- [FoilFlow Store](store-foilflow.claudewhite.live)
+- [FoilFlow Customer](customer-foilflow.claudewhite.live)
+- [FoilFlow Manager](manager-foilflow.claudewhite.live)
+- [FoilFlow API](api-foilflow.claudewhite.live)
 
 ## Instructions
 
