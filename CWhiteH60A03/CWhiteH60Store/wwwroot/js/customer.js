@@ -1,46 +1,45 @@
 async function searchCustomer() {
-    const input = document.querySelector('#search-input').value;
-    let endpoint = "";
-    
-    if (input) {
-        endpoint = `http://localhost:5115/api/Customers?param=${input}`;
-    }
-    else {
-        endpoint = "http://localhost:5115/api/Customers";
-    }
-    
-    const response = await fetch(endpoint, { method: 'GET' });
-    
-    if (response.ok) {
-        const data = await response.json();
-        updateTable(data);
-    } else {
-        console.error('Failed to fetch customer data');
-    }
+  const input = document.querySelector("#search-input").value;
+  let endpoint = "";
+
+  if (input) {
+    endpoint = `https://api-foilflow.claudewhite.live/api/Customers?param=${input}`;
+  } else {
+    endpoint = "https://api-foilflow.claudewhite.live/api/Customers";
+  }
+
+  const response = await fetch(endpoint, { method: "GET" });
+
+  if (response.ok) {
+    const data = await response.json();
+    updateTable(data);
+  } else {
+    console.error("Failed to fetch customer data");
+  }
 }
 
 function updateTable(customers) {
-    if (customers.$values) {
-        customers = customers.$values;
-    }
-    const tbody = document.querySelector('#customer-table-body');
-    tbody.innerHTML = '';
+  if (customers.$values) {
+    customers = customers.$values;
+  }
+  const tbody = document.querySelector("#customer-table-body");
+  tbody.innerHTML = "";
 
-    if (customers.length === 0) {
-        tbody.innerHTML = `
+  if (customers.length === 0) {
+    tbody.innerHTML = `
             <tr>
                 <td>
                     <h4 class="text-lg">No customers</h4>
                 </td>
             </tr>
         `;
-        return;
-    }
+    return;
+  }
 
-    customers.forEach(customer => {
-        const row = document.createElement('tr');
-        row.classList.add('hover');
-        row.innerHTML = `
+  customers.forEach((customer) => {
+    const row = document.createElement("tr");
+    row.classList.add("hover");
+    row.innerHTML = `
             <td class="hidden md:table-cell">
                 ${customer.firstName ?? ""}
             </td>
@@ -64,25 +63,29 @@ function updateTable(customers) {
                 </div>
             </td>
         `;
-        tbody.appendChild(row);
-    });
+    tbody.appendChild(row);
+  });
 }
 
 function showDeleteModal(customerId) {
-    const modal = document.querySelector('#delete-modal');
-    const deleteAction = document.querySelector('#delete-action');
-    deleteAction.innerHTML = `
+  const modal = document.querySelector("#delete-modal");
+  const deleteAction = document.querySelector("#delete-action");
+  deleteAction.innerHTML = `
         <button class="btn btn-info hover:btn-error" onclick="deleteCustomer(${customerId})">Confirm</button>
     `;
-    modal.showModal();
+  modal.showModal();
 }
 
 async function deleteCustomer(customerId) {
-    const response = await fetch(`http://localhost:5115/api/Customers/${customerId}`, { method: 'DELETE' });
-    if (response.ok) {
-        console.log("Customer deleted");
-        await searchCustomer();
-        const modal = document.querySelector('#delete-modal');
-        modal.close();
-    }
+  const response = await fetch(
+    `https://api-foilflow.claudewhite.live/api/Customers/${customerId}`,
+    { method: "DELETE" },
+  );
+  if (response.ok) {
+    console.log("Customer deleted");
+    await searchCustomer();
+    const modal = document.querySelector("#delete-modal");
+    modal.close();
+  }
 }
+
